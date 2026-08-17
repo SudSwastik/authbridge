@@ -1,0 +1,32 @@
+# Local multi-container dev/staging stack. No database and no local IdP container —
+# Auth0 and Entra ID are external services; every auth-relevant value comes from the two
+# .env files below (copy from each app's .env.example).
+#
+# Both containers are stateless (JWT on the backend, encrypted cookie session on the
+# frontend), so this compose file is a faithful single-host stand-in for how the same
+# images would run behind an ALB across many ECS/EKS tasks — no service here holds
+# in-memory state another replica would need.
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    env_file:
+      - ./frontend/.env
+    environment:
+      # In-network service name, not localhost — the frontend's server-side code (token
+      # exchange, backend API calls) runs inside this container, not the user's browser.
+      BACKEND_API_URL: http://backend:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
