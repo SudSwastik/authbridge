@@ -76,7 +76,7 @@ authbridge/
   docker-compose.yml
 ```
 
-`frontend/` and `docs/` are landing in follow-up commits; `backend/` is complete.
+`backend/` and `frontend/` are complete; `docs/` is landing in a follow-up commit.
 
 ## Quick start
 
@@ -85,16 +85,22 @@ file in `backend/` and `frontend/` to `.env` and fill in the values from your ow
 tenant (see `docs/SETUP.md` once it lands).
 
 ```bash
-# backend only, for now
+docker compose up --build
+```
+
+Or run each app individually:
+
+```bash
 cd backend
 cp .env.example .env   # fill in OIDC_ISSUER_URI / OIDC_AUDIENCE / AUTHZ_ROLES_CLAIM
 mvn spring-boot:run
 ```
 
-Once the frontend and `docker-compose.yml` land, the full stack will run with:
-
 ```bash
-docker compose up --build
+cd frontend
+cp .env.example .env   # fill in OIDC_ISSUER_URI / OIDC_CLIENT_ID / OIDC_CLIENT_SECRET / COOKIE_SECRET / ...
+npm install
+npm run dev
 ```
 
 ## Why no vendor lock-in
