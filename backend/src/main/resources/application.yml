@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: authbridge-backend
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Spring auto-discovers the JWKS endpoint from
+          # <issuer-uri>/.well-known/openid-configuration — never hardcode a JWKS URL.
+          # For Auth0 this is https://YOUR_TENANT.auth0.com/ (trailing slash matters).
+          # For a different IdP (Keycloak, Okta, Entra-direct) this is the ONLY line
+          # that needs to change to point validation at a new issuer.
+          issuer-uri: ${OIDC_ISSUER_URI}
+          # Explicit audience check on top of the default iss/exp/signature validation —
+          # rejects tokens that weren't minted for this API even if otherwise valid.
+          audiences: ${OIDC_AUDIENCE}
+
+app:
+  authorization:
+    # Name of the JWT claim carrying the caller's upstream group/role identifiers.
+    # Auth0 requires custom claims to be namespaced (a plain URI), populated by an
+    # Auth0 Action — see docs/SETUP.md.
+    roles-claim: ${AUTHZ_ROLES_CLAIM:https://authbridge.app/groups}
+    # Upstream group/role identifier -> app role name. Entra ID emits group *object GUIDs*
+    # by default, so keys here are typically GUIDs, not human-readable names.
+    #
+    # This map deliberately stays in YAML rather than env vars: Spring's relaxed env-var
+    # binding lowercases keys and treats "_" as a word separator, which corrupts GUID keys
+    # (they contain hyphens and mixed case matters for exact claim-value matching). Treat
+    # this block as versioned application config — edit it directly, or override the whole
+    # `app.authorization.role-mapping` key from a mounted profile-specific YAML file in
+    # production (e.g. an ECS task-definition config volume), not from a single env var.
+    role-mapping:
+      # 00000000-0000-0000-0000-000000000000: ADMIN
+      {}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

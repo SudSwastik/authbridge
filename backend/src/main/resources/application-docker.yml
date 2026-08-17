@@ -1,0 +1,16 @@
+# Activated with SPRING_PROFILES_ACTIVE=docker (see ../docker-compose.yml).
+#
+# Deliberately empty of auth config: issuer-uri/audience/role-mapping are NOT
+# environment-specific in the OIDC sense — they come from the same env vars regardless of
+# where the container runs. This profile exists purely for container-shaped operational
+# concerns (structured logging, binding to 0.0.0.0, exposing the health endpoint for the
+# ECS/ALB target-group health check) so those concerns don't get tangled into the auth
+# config above.
+server:
+  address: 0.0.0.0
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
