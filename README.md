@@ -76,13 +76,13 @@ authbridge/
   docker-compose.yml
 ```
 
-`backend/` and `frontend/` are complete; `docs/` is landing in a follow-up commit.
+`backend/`, `frontend/`, and `docs/` are all complete.
 
 ## Quick start
 
 Each app is configured entirely through environment variables — copy the `.env.example`
 file in `backend/` and `frontend/` to `.env` and fill in the values from your own Auth0
-tenant (see `docs/SETUP.md` once it lands).
+tenant (see `docs/SETUP.md`).
 
 ```bash
 docker compose up --build
@@ -114,4 +114,4 @@ npm run dev
   `@auth0/nextjs-auth0`), driven purely by `OIDC_ISSUER_URI` and friends, wrapped behind an
   `AuthProvider` interface that the rest of the app depends on.
 
-See `docs/SWAP_IDP.md` (landing soon) for the exact file-by-file diff of moving off Auth0.
+See `docs/SWAP_IDP.md` for the exact file-by-file diff of moving off Auth0.
