@@ -1,3 +1,6 @@
+# --- CodeGraph local index (regenerated per machine) ---
+.codegraph/
+
 # --- secrets / local env ---
 .env
 .env.*
